@@ -1,0 +1,5 @@
+spring:
+  application:
+    name: easyexcel
+server:
+  port: 7000
