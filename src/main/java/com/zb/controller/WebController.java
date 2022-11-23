@@ -1,10 +1,13 @@
 package com.zb.controller;
 
 import com.alibaba.excel.EasyExcel;
+import com.alibaba.excel.ExcelWriter;
 import com.alibaba.excel.support.ExcelTypeEnum;
+import com.alibaba.excel.write.metadata.WriteSheet;
 import com.alibaba.excel.write.metadata.style.WriteCellStyle;
 import com.alibaba.excel.write.metadata.style.WriteFont;
 import com.zb.pojo.User;
+import com.zb.utils.ExcelCellWidthStyleStrategy;
 import com.zb.utils.ExcelMergeHelper;
 import com.zb.write.CellStyleStrategy;
 import com.zb.write.ExcelFillCellMergeStrategy;
@@ -16,6 +19,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.Date;
@@ -39,6 +44,11 @@ public class WebController {
         return list;
     }
 
+    /**
+     * 单sheet导出
+     *
+     * @param response 响应
+     */
     @PostMapping("write")
     public void show(HttpServletResponse response) {
         try {
@@ -81,9 +91,52 @@ public class WebController {
         }
     }
 
+    /**
+     * 多sheet导出
+     *
+     * @param response 响应
+     */
+    @PostMapping("/writeB")
+    public void write(HttpServletResponse response) {
+        try {
+            response.setContentType("application/vnd.ms-excel");
+            response.setCharacterEncoding("utf-8");
+            //  设置文件名称
+            String fileName = URLEncoder.encode("test", "UTF-8");
+            response.setHeader("Content-disposition", "attachment;filename=" + fileName + ".xlsx");
+            List<User> temp = new ArrayList<>();
+            Date date = new Date();
+            for (int i = 0; i < 5; i++) {
+                User user = new User();
+                user.setName("test" + i);
+                user.setAge("1" + i);
+                user.setNo("2" + 1);
+                user.setDate(date);
+                temp.add(user);
+            }
+            int[] mergeColumnIndex = {2};
+            // 需要从第几行开始合并
+            int mergeRowIndex = 1;
+            OutputStream stream = response.getOutputStream();
+            ExcelWriter excelWriter = EasyExcel.write(stream)
+                    .registerWriteHandler(horizontalCellStyleStrategyBuilder())
+                    .registerWriteHandler(new ExcelCellWidthStyleStrategy())
+                    .registerWriteHandler(new ExcelFillCellMergeStrategy(mergeRowIndex, mergeColumnIndex))
+                    .excelType(ExcelTypeEnum.XLSX)
+                    .autoCloseStream(true)
+                    .build();
+            WriteSheet sheet = EasyExcel.writerSheet(0, "test1").head(User.class).build();
+            excelWriter.write(temp, sheet);
+            WriteSheet sheet1 = EasyExcel.writerSheet(1, "test2").head(User.class).build();
+            excelWriter.write(temp, sheet1);
+            excelWriter.finish();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     /**
-     * 样式剧中
+     * 单元格格式配置
      *
      * @return
      */
@@ -102,7 +155,6 @@ public class WebController {
         contentWriteCellStyle.setHorizontalAlignment(HorizontalAlignment.CENTER);
         //垂直居中
         contentWriteCellStyle.setVerticalAlignment(VerticalAlignment.CENTER);
-
         return new CellStyleStrategy(headWriteCellStyle, contentWriteCellStyle);
     }
 }
