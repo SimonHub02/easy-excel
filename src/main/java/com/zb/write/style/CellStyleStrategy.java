@@ -1,4 +1,4 @@
-package com.zb.write;
+package com.zb.write.style;
 
 import com.alibaba.excel.metadata.Head;
 import com.alibaba.excel.util.StyleUtil;

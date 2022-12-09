@@ -1,4 +1,4 @@
-package com.zb.utils;
+package com.zb.write.style;
 
 import com.alibaba.excel.enums.CellDataTypeEnum;
 import com.alibaba.excel.metadata.CellData;
@@ -14,7 +14,7 @@ import java.util.Map;
 
 /**
  * @author shuos
- * @deprecated 列宽自适应工具类
+ * @deprecated 导出excel列宽自适应工具类
  */
 public class ExcelCellWidthStyleStrategy extends AbstractColumnWidthStyleStrategy {
 

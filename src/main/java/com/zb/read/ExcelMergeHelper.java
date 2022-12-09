@@ -1,4 +1,4 @@
-package com.zb.utils;
+package com.zb.read;
 
 import com.alibaba.excel.EasyExcel;
 import com.alibaba.excel.annotation.ExcelProperty;
@@ -12,6 +12,11 @@ import org.springframework.web.multipart.MultipartFile;
 import java.lang.reflect.Field;
 import java.util.List;
 
+/**
+ * @param <T> 类型
+ * @author shuos
+ *  读取合并单元格的excel格式
+ */
 public class ExcelMergeHelper<T> {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(ExcelMergeHelper.class);

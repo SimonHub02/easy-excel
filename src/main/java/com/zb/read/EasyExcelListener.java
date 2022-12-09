@@ -1,4 +1,4 @@
-package com.zb.utils;
+package com.zb.read;
 
 import com.alibaba.excel.context.AnalysisContext;
 import com.alibaba.excel.event.AnalysisEventListener;
@@ -10,6 +10,11 @@ import lombok.NoArgsConstructor;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * @param <T> 约定
+ * @author shuos
+ * 读取监听器
+ */
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
